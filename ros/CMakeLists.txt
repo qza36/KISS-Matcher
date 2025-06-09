@@ -133,11 +133,35 @@ target_link_libraries(inter_frame_alignment
   gtsam
 )
 
+add_executable(pcd_publisher src/pcd_publisher.cpp)
+ament_target_dependencies(pcd_publisher
+  rclcpp
+  sensor_msgs
+  pcl_conversions
+  PCL
+)
+
+target_link_libraries(pcd_publisher
+  ${PCL_LIBRARIES}
+)
+
+add_executable(pcl_filter src/pcl_filter.cpp)
+ament_target_dependencies(pcl_filter
+  rclcpp
+  sensor_msgs
+  pcl_conversions
+  PCL
+)
+target_link_libraries(pcl_filter
+  ${PCL_LIBRARIES}
+)
 install(TARGETS
   registration_visualizer
   run_kiss_matcher
   kiss_matcher_sam
   inter_frame_alignment
+  pcd_publisher
+    pcl_filter
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION lib/${PROJECT_NAME}
 )

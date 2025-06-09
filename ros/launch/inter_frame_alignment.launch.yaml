@@ -6,11 +6,11 @@ launch:
   - arg: { name: rviz_path,    default: $(find-pkg-share kiss_matcher_ros)/rviz/kimera_multi_initial_alignment.rviz }
   - arg: { name: config_path,  default: $(find-pkg-share kiss_matcher_ros)/config/alignment_config.yaml }
 
-  - arg: { name: source_topic, default: "/source_cloud", description: "Input source cloud topic" }
-  - arg: { name: target_topic, default: "/target_cloud", description: "Input target cloud topic" }
+  - arg: { name: source_topic, default: "/unilidar/cloud", description: "Input source cloud topic" }
+  - arg: { name: target_topic, default: "/source_cloud", description: "Input target cloud topic" }
 
-  - arg: { name: source_frame, default: "source_map", description: "Frame ID of the source cloud" }
-  - arg: { name: target_frame, default: "target_map", description: "Frame ID of the target cloud" }
+  - arg: { name: source_frame, default: "unilidar_lidar", description: "Frame ID of the source cloud" }
+  - arg: { name: target_frame, default: "map", description: "Frame ID of the target cloud" }
 
   - arg: { name: frame_update_hz, default: "0.1", description: "How often to run alignment (Hz)" }
 

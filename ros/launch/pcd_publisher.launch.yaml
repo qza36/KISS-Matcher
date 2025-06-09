@@ -1,0 +1,32 @@
+---
+# filepath: /home/arlo/CLionProjects/KISS-Matcher/ros/launch/pcd_publisher.launch.yaml
+launch:
+  - arg: { name: pcd_file_path,   default: "/home/arlo/CLionProjects/dragon_nav/test.pcd", description: "Path to the PCD file to publish" }
+  - arg: { name: publish_rate,    default: "1.0", description: "Rate at which to publish the PCD file (Hz)" }
+  - arg: { name: frame_id,        default: "map", description: "Frame ID for the published point cloud" }
+  - arg: { name: topic_name,      default: "/source_cloud", description: "Topic name for publishing the point cloud" }
+  - arg: { name: publish_once,    default: "false", description: "Whether to publish once and stop" }
+  - arg: { name: namespace,       default: "pcd_publisher", description: "Namespace for the node" }
+
+  - node:
+      namespace: $(var namespace)
+      pkg: kiss_matcher_ros
+      exec: pcd_publisher
+      name: pcd_publisher
+      output: screen
+      on_exit: shutdown
+
+      remap:
+        - { from: 'cloud', to: $(var topic_name) }
+
+      param:
+        - name: "pcd_file_path"
+          value: "$(var pcd_file_path)"
+        - name: "publish_rate"
+          value: "$(var publish_rate)"
+        - name: "frame_id"
+          value: "$(var frame_id)"
+        - name: "publish_once"
+          value: "$(var publish_once)"
+        - name: "verbose"
+          value: true

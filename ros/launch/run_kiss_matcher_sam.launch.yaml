@@ -8,9 +8,9 @@ launch:
   - arg: {name: config_path,   default: $(find-pkg-share kiss_matcher_ros)/config/slam_config.yaml}
 
   - arg: {name: map_frame , default: 'map' , description: Global map frame ID}
-  - arg: {name: base_frame, default: 'base', description: Robot's base frame ID}
+  - arg: {name: base_frame, default: 'odom', description: Robot's base frame ID}
 
-  - arg: {name: odom_topic, default: "/odometry"}
+  - arg: {name: odom_topic, default: "/Odometry"}
   - arg: {name: scan_topic, default: "/cloud_registered"}
 
   - node:

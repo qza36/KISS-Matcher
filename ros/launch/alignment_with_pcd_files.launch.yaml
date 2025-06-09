@@ -1,0 +1,60 @@
+---
+# filepath: /home/arlo/CLionProjects/KISS-Matcher/ros/launch/alignment_with_pcd_files.launch.yaml
+launch:
+  # General arguments
+  - arg: { name: start_rviz,      default: "true", description: "Start RViz automatically" }
+  - arg: { name: namespace,       default: "inter_frame", description: "Namespace for alignment node" }
+
+  # PCD file arguments
+  - arg: { name: source_pcd_path, default: "", description: "Path to the source PCD file" }
+  - arg: { name: target_pcd_path, default: "", description: "Path to the target PCD file" }
+  
+  # Frame IDs
+  - arg: { name: source_frame,    default: "source_map", description: "Frame ID of the source cloud" }
+  - arg: { name: target_frame,    default: "target_map", description: "Frame ID of the target cloud" }
+  
+  # Topics
+  - arg: { name: source_topic,    default: "/source_cloud", description: "Input source cloud topic" }
+  - arg: { name: target_topic,    default: "/target_cloud", description: "Input target cloud topic" }
+  
+  # Other configuration
+  - arg: { name: publish_rate,    default: "1.0", description: "Rate at which to publish PCD files (Hz)" }
+  - arg: { name: frame_update_hz, default: "0.2", description: "How often to run alignment (Hz)" }
+  - arg: { name: config_path,     default: $(find-pkg-share kiss_matcher_ros)/config/alignment_config.yaml }
+  - arg: { name: rviz_path,       default: $(find-pkg-share kiss_matcher_ros)/rviz/kimera_multi_initial_alignment.rviz }
+
+  # Launch source PCD publisher
+  - include:
+      file: $(find-pkg-share kiss_matcher_ros)/launch/pcd_publisher.launch.yaml
+      arg:
+        namespace: source_publisher
+        pcd_file_path: $(var source_pcd_path)
+        frame_id: $(var source_frame)
+        topic_name: $(var source_topic)
+        publish_rate: $(var publish_rate)
+        publish_once: "false"
+
+  # Launch target PCD publisher
+  - include:
+      file: $(find-pkg-share kiss_matcher_ros)/launch/pcd_publisher.launch.yaml
+      arg:
+        namespace: target_publisher
+        pcd_file_path: $(var target_pcd_path)
+        frame_id: $(var target_frame)
+        topic_name: $(var target_topic)
+        publish_rate: $(var publish_rate)
+        publish_once: "false"
+
+  # Launch inter_frame_alignment node
+  - include:
+      file: $(find-pkg-share kiss_matcher_ros)/launch/inter_frame_alignment.launch.yaml
+      arg:
+        namespace: $(var namespace)
+        start_rviz: $(var start_rviz)
+        rviz_path: $(var rviz_path)
+        config_path: $(var config_path)
+        source_topic: $(var source_topic)
+        target_topic: $(var target_topic)
+        source_frame: $(var source_frame)
+        target_frame: $(var target_frame)
+        frame_update_hz: $(var frame_update_hz)
