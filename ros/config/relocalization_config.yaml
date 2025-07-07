@@ -1,0 +1,50 @@
+# =====================================================================================
+# Relocalization Parameter Configuration for KISS-Matcher
+# This configuration enables robot relocalization in a prior PCD map
+# =====================================================================================
+/**:
+  ros__parameters:
+    # Prior map configuration
+    map_file_path: ""                    # Path to the prior PCD map file
+    map_frame: "map"                     # Frame ID for the map
+    base_frame: "base_link"              # Robot base frame
+    odom_frame: "odom"                   # Odometry frame
+    
+    # Relocalization settings
+    publish_rate: 10.0                   # Rate to publish map->odom transform (Hz)
+    relocalization_timeout: 30.0         # Timeout for relocalization attempts (sec)
+    enable_auto_relocalization: false    # Automatically attempt relocalization on startup
+    confidence_threshold: 0.7            # Minimum confidence to accept relocalization result
+    
+    # Point cloud processing
+    scan_topic: "/velodyne_points"       # Input point cloud topic
+    voxel_resolution: 0.3                # Voxel grid resolution for downsampling
+    max_scan_range: 100.0                # Maximum range to consider from lidar scan
+    min_scan_range: 0.5                  # Minimum range to consider from lidar scan
+    
+    # Coarse registration (KISS-Matcher)
+    coarse_reg:
+      enable_global_search: true         # Enable global search for initial alignment
+      max_search_attempts: 5             # Maximum number of search attempts
+      search_radius: 50.0                # Search radius for potential matches (m)
+      min_inliers_threshold: 100         # Minimum inliers to accept coarse registration
+      
+    # Fine registration (small-gicp)
+    fine_reg:
+      num_threads: 8                     # Number of threads for fine registration
+      correspondences_number: 20         # Minimum correspondences required  
+      max_num_iter: 50                   # Maximum iterations for fine registration
+      max_corr_dist: 2.0                 # Maximum correspondence distance
+      overlap_threshold: 70.0            # Minimum overlap percentage to accept result
+      
+    # TF broadcasting
+    broadcast_tf: true                   # Whether to broadcast map->odom transform
+    tf_tolerance: 0.1                    # Transform time tolerance (sec)
+    
+    # Visualization
+    publish_aligned_cloud: true          # Publish aligned point cloud for visualization
+    aligned_cloud_topic: "/aligned_scan" # Topic for aligned cloud visualization
+    
+    # Debugging
+    verbose: true                        # Enable verbose output
+    save_debug_clouds: false             # Save debug point clouds to files

@@ -69,6 +69,14 @@ add_definitions(${PCL_DEFINITIONS})
 
 find_package(GTSAM REQUIRED)
 
+# Generate service interface
+find_package(rosidl_default_generators REQUIRED)
+
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "srv/Relocalize.srv"
+  DEPENDENCIES geometry_msgs std_msgs
+)
+
 ################################################################################
 add_executable(run_kiss_matcher src/run_kiss_matcher.cpp)
 target_include_directories(run_kiss_matcher
@@ -133,16 +141,43 @@ target_link_libraries(inter_frame_alignment
   gtsam
 )
 
+add_executable(relocalization_node src/relocalization_node.cpp
+                                   src/slam/relocalization.cpp
+                                   src/slam/loop_closure.cpp)
+ament_target_dependencies(relocalization_node
+  rclcpp
+  tf2_ros
+  tf2_eigen
+  sensor_msgs
+  nav_msgs
+  geometry_msgs
+  std_srvs
+  visualization_msgs
+  pcl_conversions
+  PCL
+)
+
+target_link_libraries(relocalization_node
+  kiss_matcher::kiss_matcher_core
+  ${PCL_LIBRARIES}
+  small_gicp
+  gtsam
+)
+
+# Link against the generated service interface
+rosidl_target_interfaces(relocalization_node ${PROJECT_NAME} "rosidl_typesupport_cpp")
+
 install(TARGETS
   registration_visualizer
   run_kiss_matcher
   kiss_matcher_sam
   inter_frame_alignment
+  relocalization_node
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 
-install(DIRECTORY launch config rviz
+install(DIRECTORY launch config rviz scripts
   DESTINATION share/${PROJECT_NAME}
 )
 

@@ -1,0 +1,12 @@
+# Request to perform relocalization
+# If pose_hint is provided, it will be used as initial guess
+# If pose_hint is not provided (all zeros), global relocalization will be performed
+geometry_msgs/PoseWithCovarianceStamped pose_hint
+
+---
+
+# Response indicating success/failure and the determined pose
+bool success
+string message
+geometry_msgs/PoseWithCovarianceStamped pose
+float64 confidence  # Confidence score (0.0 to 1.0)
